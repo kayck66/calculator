@@ -1,19 +1,20 @@
 const result = document.querySelector(".result"); // Para mostrar o resultado final
 const operationDisplay = document.querySelector(".operation"); // Para mostrar os valores digitados
 const buttons = document.querySelectorAll(".buttons button");
+const toggleButton = document.querySelector("#mode-toggle"); // Botão para alternar entre claro e escuro
 
 let currentNumber = "";
 let firstOperand = null;
 let operator = null;
 let restart = false;
 
+// Função para atualizar o display do resultado
 function updateResult(originalClear = false) {
-    // Atualiza o display do resultado
     result.innerText = originalClear ? 0 : currentNumber.replace(".", ",");
 }
 
+// Função para atualizar o display da operação
 function updateOperationDisplay() {
-    // Atualiza o display da operação
     if (firstOperand !== null && operator) {
         operationDisplay.innerText = `${firstOperand.toString().replace(".", ",")} ${operator} ${currentNumber.replace(".", ",") || ""}`;
     } else {
@@ -21,6 +22,7 @@ function updateOperationDisplay() {
     }
 }
 
+// Função para adicionar dígitos ao display
 function addDigit(digit) {
     if (digit === "," && (currentNumber.includes(",") || !currentNumber)) return;
 
@@ -35,6 +37,7 @@ function addDigit(digit) {
     updateOperationDisplay();
 }
 
+// Função para definir o operador
 function setOperator(newOperator) {
     if (currentNumber) {
         firstOperand = parseFloat(currentNumber.replace(",", "."));
@@ -45,6 +48,7 @@ function setOperator(newOperator) {
     updateOperationDisplay();
 }
 
+// Função para calcular o resultado
 function calculate() {
     if (operator === null || firstOperand === null) return;
     let secondOperand = parseFloat(currentNumber.replace(",", "."));
@@ -82,6 +86,7 @@ function calculate() {
     updateResult();
 }
 
+// Função para limpar a calculadora
 function clearCalculator() {
     currentNumber = "";
     firstOperand = null;
@@ -90,6 +95,7 @@ function clearCalculator() {
     operationDisplay.innerText = ""; // Limpa o display da operação
 }
 
+// Função para calcular o percentual
 function setPercentage() {
     let result = parseFloat(currentNumber) / 100;
 
@@ -105,6 +111,24 @@ function setPercentage() {
     updateOperationDisplay();
 }
 
+// Função para alternar entre o modo claro e escuro
+function toggleTheme() {
+    const body = document.body;
+    if (body.classList.contains("light-mode")) {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        toggleButton.innerText = "Modo Claro"; // Atualiza o texto do botão
+    } else {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        toggleButton.innerText = "Modo Escuro"; // Atualiza o texto do botão
+    }
+}
+
+// Adicionando o ouvinte para alternar o tema
+toggleButton.addEventListener("click", toggleTheme);
+
+// Adicionando os ouvintes de eventos para os botões
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         const buttonText = button.innerText;
